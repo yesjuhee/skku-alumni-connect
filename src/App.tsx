@@ -13,6 +13,8 @@ import NewApply from "./pages/NewApply";
 import NewApplyComplete from "./pages/NewApplyComplete";
 import MainLayout from "./components/MainLayout";
 import AboutPage from "./pages/AboutPage";
+import MembersPage from "./pages/MembersPage";
+import MemberDetailPage from "./pages/MemberDetailPage";
 import MyPage from "./pages/MyPage";
 import IDCardPage from "./pages/IDCardPage";
 import BenefitsPage from "./pages/BenefitsPage";
@@ -39,7 +41,8 @@ const App = () => (
           <Route path="/main" element={<MainLayout />}>
             <Route index element={<Navigate to="/main/about" replace />} />
             <Route path="about" element={<AboutPage />} />
-            <Route path="members" element={<PlaceholderTab />} />
+            <Route path="members" element={<MembersPage />} />
+            <Route path="members/:id" element={<MemberDetailPage />} />
             <Route path="news" element={<PlaceholderTab />} />
             <Route path="community" element={<PlaceholderTab />} />
             <Route path="business" element={<PlaceholderTab />} />
