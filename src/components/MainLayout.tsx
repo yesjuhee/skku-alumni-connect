@@ -26,7 +26,7 @@ const MainLayout = () => {
   const activeTab = tabs.find((t) => location.pathname.startsWith(t.path))?.id || "about";
 
   const handleTabClick = (tab: typeof tabs[0]) => {
-    if (tab.id === "about" || tab.id === "members" || tab.id === "news" || tab.id === "community") {
+    if (tab.id === "about" || tab.id === "members" || tab.id === "news" || tab.id === "community" || tab.id === "business") {
       navigate(tab.path);
     } else {
       toast.info("준비 중입니다");

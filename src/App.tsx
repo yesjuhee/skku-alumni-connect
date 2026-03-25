@@ -19,6 +19,7 @@ import NewsPage from "./pages/NewsPage";
 import NewsDetailPage from "./pages/NewsDetailPage";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityDetailPage from "./pages/CommunityDetailPage";
+import BusinessPage from "./pages/BusinessPage";
 import MyPage from "./pages/MyPage";
 import IDCardPage from "./pages/IDCardPage";
 import BenefitsPage from "./pages/BenefitsPage";
