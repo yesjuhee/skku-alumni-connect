@@ -24,6 +24,12 @@ import MyPage from "./pages/MyPage";
 import IDCardPage from "./pages/IDCardPage";
 import BenefitsPage from "./pages/BenefitsPage";
 import PlaceholderTab from "./pages/PlaceholderTab";
+import AdminLayout from "./components/AdminLayout";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminMembers from "./pages/admin/AdminMembers";
+import AdminUpload from "./pages/admin/AdminUpload";
+import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,6 +63,16 @@ const App = () => (
             <Route path="mypage" element={<MyPage />} />
             <Route path="id-card" element={<IDCardPage />} />
             <Route path="benefits" element={<BenefitsPage />} />
+          </Route>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="members" element={<AdminMembers />} />
+            <Route path="upload" element={<AdminUpload />} />
+            <Route path="applications" element={<AdminPlaceholder title="신규 신청 관리" />} />
+            <Route path="payments" element={<AdminPlaceholder title="기여금 관리" />} />
+            <Route path="news" element={<AdminPlaceholder title="공지/뉴스 관리" />} />
+            <Route path="community" element={<AdminPlaceholder title="커뮤니티 관리" />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
