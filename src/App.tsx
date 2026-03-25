@@ -52,7 +52,7 @@ const App = () => (
             <Route path="community" element={<CommunityPage />} />
             <Route path="community/club/:id" element={<CommunityDetailPage />} />
             <Route path="community/research/:id" element={<CommunityDetailPage />} />
-            <Route path="business" element={<PlaceholderTab />} />
+            <Route path="business" element={<BusinessPage />} />
             <Route path="mypage" element={<MyPage />} />
             <Route path="id-card" element={<IDCardPage />} />
             <Route path="benefits" element={<BenefitsPage />} />
