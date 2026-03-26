@@ -27,7 +27,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  ArrowLeft,
+  ArrowLeft, Search, X, ChevronDown,
   Plus,
   User,
   ImageIcon,
