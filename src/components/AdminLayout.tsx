@@ -17,6 +17,7 @@ const menuItems = [
   { label: "신규 신청 관리", icon: FileText, path: "/admin/applications" },
   { label: "기여금 관리", icon: CreditCard, path: "/admin/payments" },
   { label: "공지/뉴스 관리", icon: Newspaper, path: "/admin/news" },
+
   { label: "커뮤니티 관리", icon: MessageSquare, path: "/admin/community" },
 ];
 

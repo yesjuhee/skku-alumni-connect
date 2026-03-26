@@ -73,10 +73,10 @@ const App = () => (
             <Route index element={<AdminDashboard />} />
             <Route path="members" element={<AdminMembers />} />
             <Route path="upload" element={<AdminUpload />} />
-            <Route path="applications" element={<AdminPlaceholder title="신규 신청 관리" />} />
-            <Route path="payments" element={<AdminPlaceholder title="기여금 관리" />} />
-            <Route path="news" element={<AdminPlaceholder title="공지/뉴스 관리" />} />
-            <Route path="community" element={<AdminPlaceholder title="커뮤니티 관리" />} />
+            <Route path="applications" element={<AdminApplications />} />
+            <Route path="payments" element={<AdminPayments />} />
+            <Route path="news" element={<AdminPosts />} />
+            <Route path="community" element={<AdminCommunity />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
