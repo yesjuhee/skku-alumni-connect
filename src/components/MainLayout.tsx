@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Building2, Users, Newspaper, MessageSquare, Briefcase, User, LogOut, CreditCard, Gift, ChevronDown } from "lucide-react";
+import { Home, Users, Newspaper, MessageSquare, User, LogOut, CreditCard, Gift, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,28 +8,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import skkuLogo from "@/assets/skku-alumni-logo.png";
-import { toast } from "sonner";
 
 const tabs = [
-  { id: "about", label: "총동창회 소개", icon: Building2, path: "/main/about" },
+  { id: "home", label: "홈", icon: Home, path: "/main/home" },
   { id: "members", label: "임원정보", icon: Users, path: "/main/members" },
   { id: "news", label: "공지 및 뉴스", icon: Newspaper, path: "/main/news" },
   { id: "community", label: "커뮤니티", icon: MessageSquare, path: "/main/community" },
-  { id: "business", label: "Business 정보센터", icon: Briefcase, path: "/main/business" },
 ];
 
 const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const activeTab = tabs.find((t) => location.pathname.startsWith(t.path))?.id || "about";
+  const activeTab = tabs.find((t) => location.pathname.startsWith(t.path))?.id || "home";
 
   const handleTabClick = (tab: typeof tabs[0]) => {
-    if (tab.id === "about" || tab.id === "members" || tab.id === "news" || tab.id === "community" || tab.id === "business") {
-      navigate(tab.path);
-    } else {
-      toast.info("준비 중입니다");
-    }
+    navigate(tab.path);
   };
 
   const handleLogout = () => {
