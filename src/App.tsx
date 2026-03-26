@@ -30,6 +30,10 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminMembers from "./pages/admin/AdminMembers";
 import AdminUpload from "./pages/admin/AdminUpload";
 import AdminPlaceholder from "./pages/admin/AdminPlaceholder";
+import AdminApplications from "./pages/admin/AdminApplications";
+import AdminPayments from "./pages/admin/AdminPayments";
+import AdminPosts from "./pages/admin/AdminPosts";
+import AdminCommunity from "./pages/admin/AdminCommunity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
