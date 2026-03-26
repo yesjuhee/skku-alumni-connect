@@ -77,6 +77,15 @@ const INITIAL_COLLAB_POSTS: CollabPost[] = [
   { id: "b4", title: "의료기기 유통 사업 파트너십", preview: "의료기기 해외 유통 관련 사업 파트너를 찾고 있습니다...", body: "의료기기 해외 유통 관련 사업 파트너를 찾고 있습니다.\n\n당사는 국내 의료기기 제조사와 해외 바이어를 연결하는 유통 사업을 진행 중입니다.\n\n필요 역량:\n- 해외 영업 네트워크 보유\n- 의료기기 인허가 경험\n- 물류/통관 전문 지식\n\n관심 있는 동문은 연락 바랍니다.\nhan@skkhospital.co.kr", author: "한상철", date: "2026.03.10", hasThumbnail: true },
 ];
 
+type IndustryFilterKey = "generation" | "position" | "department" | "region";
+
+const INDUSTRY_FILTER_LABELS: Record<IndustryFilterKey, string> = {
+  generation: "기수",
+  position: "직급",
+  department: "학과",
+  region: "지역",
+};
+
 const BusinessPage = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState<"industry" | "collab">("industry");
@@ -87,9 +96,59 @@ const BusinessPage = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
 
-  const industryMembers = selectedIndustry
-    ? MEMBERS.filter((m) => m.industry === selectedIndustry)
-    : [];
+  // Industry member filters
+  const [indSearch, setIndSearch] = useState("");
+  const [indSort, setIndSort] = useState<"name" | "year">("name");
+  const [indFilters, setIndFilters] = useState<Record<IndustryFilterKey, string[]>>({
+    generation: [], position: [], department: [], region: [],
+  });
+
+  const hasIndFilters = Object.values(indFilters).some((v) => v.length > 0);
+
+  const toggleIndFilter = (key: IndustryFilterKey, value: string) => {
+    setIndFilters((prev) => ({
+      ...prev,
+      [key]: prev[key].includes(value) ? prev[key].filter((v) => v !== value) : [...prev[key], value],
+    }));
+  };
+
+  const removeIndFilter = (key: IndustryFilterKey, value: string) => {
+    setIndFilters((prev) => ({ ...prev, [key]: prev[key].filter((v) => v !== value) }));
+  };
+
+  const clearIndFilters = () => {
+    setIndFilters({ generation: [], position: [], department: [], region: [] });
+    setIndSearch("");
+  };
+
+  const getIndFilterOptions = (key: IndustryFilterKey): string[] => {
+    if (key === "generation") return FILTER_OPTIONS.generationValues;
+    return FILTER_OPTIONS[key];
+  };
+
+  const getIndFilterLabel = (key: IndustryFilterKey, value: string): string => {
+    if (key === "generation") {
+      const idx = FILTER_OPTIONS.generationValues.indexOf(value);
+      return idx >= 0 ? FILTER_OPTIONS.generation[idx] : value;
+    }
+    return value;
+  };
+
+  const industryMembers = useMemo(() => {
+    if (!selectedIndustry) return [];
+    let result = MEMBERS.filter((m) => {
+      if (m.industry !== selectedIndustry) return false;
+      const q = indSearch.trim().toLowerCase();
+      if (q && !m.name.includes(q) && !m.department.toLowerCase().includes(q) && !String(m.admissionYear).includes(q)) return false;
+      if (indFilters.generation.length && !indFilters.generation.includes(m.generation)) return false;
+      if (indFilters.position.length && !indFilters.position.includes(m.position)) return false;
+      if (indFilters.department.length && !indFilters.department.includes(m.department)) return false;
+      if (indFilters.region.length && !indFilters.region.includes(m.region)) return false;
+      return true;
+    });
+    result.sort((a, b) => indSort === "name" ? a.name.localeCompare(b.name, "ko") : a.admissionYear - b.admissionYear);
+    return result;
+  }, [selectedIndustry, indSearch, indFilters, indSort]);
 
   const handleSubmitPost = () => {
     if (!newTitle.trim() || !newContent.trim()) {
