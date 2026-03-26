@@ -261,15 +261,95 @@ const BusinessPage = () => {
       {tab === "industry" && selectedIndustry && (
         <div className="space-y-4">
           <button
-            onClick={() => setSelectedIndustry(null)}
+            onClick={() => { setSelectedIndustry(null); clearIndFilters(); }}
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4" />
             업종 목록
           </button>
           <h2 className="text-lg font-semibold text-foreground">{selectedIndustry}</h2>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="이름, 학과, 학번으로 검색"
+              value={indSearch}
+              onChange={(e) => setIndSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+
+          {/* Filters + Sort */}
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex flex-wrap gap-2">
+              {(Object.keys(INDUSTRY_FILTER_LABELS) as IndustryFilterKey[]).map((key) => (
+                <DropdownMenu key={key}>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        indFilters[key].length > 0
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card text-muted-foreground border-border hover:border-foreground/30"
+                      }`}
+                    >
+                      {INDUSTRY_FILTER_LABELS[key]}
+                      {indFilters[key].length > 0 && (
+                        <span className="ml-0.5 bg-primary-foreground/20 rounded-full px-1.5 text-xs">
+                          {indFilters[key].length}
+                        </span>
+                      )}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-h-60 overflow-y-auto">
+                    {getIndFilterOptions(key).map((option) => (
+                      <DropdownMenuItem
+                        key={option}
+                        onClick={() => toggleIndFilter(key, option)}
+                        className={indFilters[key].includes(option) ? "bg-accent font-semibold" : ""}
+                      >
+                        {getIndFilterLabel(key, option)}
+                        {indFilters[key].includes(option) && <span className="ml-auto text-primary">✓</span>}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ))}
+            </div>
+            <Select value={indSort} onValueChange={(v) => setIndSort(v as "name" | "year")}>
+              <SelectTrigger className="w-28 h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name">이름순</SelectItem>
+                <SelectItem value="year">학번순</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Active filter tags */}
+          {hasIndFilters && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {(Object.keys(indFilters) as IndustryFilterKey[]).flatMap((key) =>
+                indFilters[key].map((value) => (
+                  <Badge key={`${key}-${value}`} variant="secondary" className="gap-1 pr-1">
+                    {getIndFilterLabel(key, value)}
+                    <button onClick={() => removeIndFilter(key, value)} className="hover:text-destructive">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))
+              )}
+              <button onClick={clearIndFilters} className="text-xs text-primary hover:underline ml-1">초기화</button>
+            </div>
+          )}
+
+          {/* Results */}
           {industryMembers.length === 0 ? (
-            <p className="text-center text-muted-foreground py-12">등록된 회원이 없습니다</p>
+            <p className="text-center text-muted-foreground py-12">
+              {indSearch || hasIndFilters ? "검색 결과가 없습니다" : "등록된 회원이 없습니다"}
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {industryMembers.map((member) => (
