@@ -12,7 +12,7 @@ import skkuLogo from "@/assets/skku-alumni-logo.png";
 const tabs = [
   { id: "home", label: "홈", icon: Home, path: "/main/home" },
   { id: "members", label: "임원정보", icon: Users, path: "/main/members" },
-  { id: "news", label: "공지 및 뉴스", icon: Newspaper, path: "/main/news" },
+  { id: "news", label: "공지/뉴스", icon: Newspaper, path: "/main/news" },
   { id: "community", label: "커뮤니티", icon: MessageSquare, path: "/main/community" },
 ];
 
