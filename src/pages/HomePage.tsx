@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Users, CreditCard, Gift, ExternalLink, ChevronRight, User } from "lucide-react";
+import { User, ExternalLink, ChevronRight, Heart, Car, Stethoscope, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -9,8 +10,9 @@ import {
 } from "@/components/ui/accordion";
 import { NEWS_ITEMS } from "@/data/news";
 import { CLUBS, RESEARCH_GROUPS } from "@/data/community";
+import { toast } from "sonner";
+import skkuLogo from "@/assets/skku-alumni-logo.png";
 
-// Mock user data (same as IDCardPage)
 const mockUser = {
   name: "홍길동",
   dept: "경영학과",
@@ -18,7 +20,37 @@ const mockUser = {
   position: "부회장",
 };
 
-// About accordion sections (from AboutPage)
+const benefits = [
+  {
+    icon: Heart,
+    title: "경조사에 조기/축하금 지원",
+    subtitle: "경조사 서비스",
+    url: "https://alumni.skku.edu/alumni/Benefit/congrat.do",
+    ready: true,
+  },
+  {
+    icon: Car,
+    title: "무료주차 신청",
+    subtitle: "주차권 서비스",
+    url: "https://alumni.skku.edu/alumni/Benefit/parking.do",
+    ready: true,
+  },
+  {
+    icon: Stethoscope,
+    title: "강북삼성병원 건강검진 할인",
+    subtitle: "의료 혜택",
+    url: "https://alumni.skku.edu/alumni/Benefit/medical.do",
+    ready: true,
+  },
+  {
+    icon: BookOpen,
+    title: "총동창회보 수령 신청",
+    subtitle: "동창회보 정기 수령",
+    url: "#",
+    ready: false,
+  },
+];
+
 const feeTable = [
   { position: "회장", fee: "5,000만원 이상" },
   { position: "부회장", fee: "100만원" },
@@ -149,10 +181,8 @@ const aboutSections = [
   },
 ];
 
-// Gather recent community posts for section 4
 function getRecentCommunityPosts() {
   const allPosts: { source: string; title: string; date: string; link: string }[] = [];
-
   [...CLUBS, ...RESEARCH_GROUPS].forEach((group) => {
     const basePath = group.type === "club" ? "/main/community/club" : "/main/community/research";
     group.posts.forEach((post) => {
@@ -164,91 +194,107 @@ function getRecentCommunityPosts() {
       });
     });
   });
-
-  // Add collab posts (same data as BusinessPage/CommunityPage)
   allPosts.push(
     { source: "협업 제안", title: "IT 시스템 구축 파트너 구합니다", date: "2026.03.22", link: "/main/community" },
     { source: "협업 제안", title: "강남 상업용 부동산 공동투자 제안", date: "2026.03.18", link: "/main/community" },
   );
-
-  // Sort by date desc and take 3
-  return allPosts
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 3);
+  return allPosts.sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
 }
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [isHorizontal, setIsHorizontal] = useState(true);
 
   const recentNotices = NEWS_ITEMS.filter((n) => n.type === "notice").slice(0, 3);
   const recentCommunity = getRecentCommunityPosts();
 
+  const handleBenefitClick = (b: typeof benefits[0]) => {
+    if (!b.ready) {
+      toast.info("준비 중입니다");
+      return;
+    }
+    window.open(b.url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-8 animate-fade-in">
 
-      {/* Section 1: Profile Summary */}
-      <button
-        onClick={() => navigate("/main/id-card")}
-        className="w-full bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all"
-      >
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center shrink-0">
-            <User className="w-7 h-7 text-primary" />
-          </div>
-          <div className="flex-1 min-w-0 text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-foreground">{mockUser.name}</span>
-              <Badge variant="outline" className="text-xs">{mockUser.position}</Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">{mockUser.dept} / {mockUser.year}학번</p>
-          </div>
-          <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />
+      {/* Section 1: Digital ID Card */}
+      <section>
+        <div className="flex justify-center gap-2 mb-4">
+          <button
+            onClick={() => setIsHorizontal(true)}
+            className={`px-4 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+              isHorizontal ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+            }`}
+          >
+            가로형
+          </button>
+          <button
+            onClick={() => setIsHorizontal(false)}
+            className={`px-4 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+              !isHorizontal ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+            }`}
+          >
+            세로형
+          </button>
         </div>
-      </button>
 
-      {/* Section 2: Quick Shortcuts */}
-      <div className="grid grid-cols-4 gap-3">
-        <button
-          onClick={() => navigate("/main/members")}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:shadow-md hover:border-primary/30 transition-all"
-        >
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Users className="w-5 h-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium text-foreground text-center leading-tight">임원 검색</span>
-        </button>
-        <button
-          onClick={() => navigate("/main/id-card")}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:shadow-md hover:border-primary/30 transition-all"
-        >
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <CreditCard className="w-5 h-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium text-foreground text-center leading-tight">디지털 신분증</span>
-        </button>
-        <button
-          onClick={() => navigate("/main/benefits")}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:shadow-md hover:border-primary/30 transition-all"
-        >
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Gift className="w-5 h-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium text-foreground text-center leading-tight">납부자 혜택</span>
-        </button>
-        <a
-          href="https://www.ihappynanum.com/Nanum/B/LQVFZCWYCZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:shadow-md hover:border-primary/30 transition-all"
-        >
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <ExternalLink className="w-5 h-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium text-foreground text-center leading-tight">기여금 납부</span>
-        </a>
-      </div>
+        <div className="flex justify-center">
+          {isHorizontal ? (
+            <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+              <div className="bg-primary px-5 py-3 flex items-center justify-between">
+                <img src={skkuLogo} alt="SKKU" className="h-6 brightness-0 invert object-contain" />
+                <span className="text-primary-foreground text-xs font-medium">EXECUTIVE ID</span>
+              </div>
+              <div className="p-5 flex gap-5">
+                <div className="w-20 h-24 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                  <User className="w-8 h-8 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-lg font-bold text-foreground">{mockUser.name}</p>
+                  <p className="text-sm text-primary font-semibold mt-0.5">{mockUser.position}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{mockUser.dept} / {mockUser.year}학번</p>
+                  <div className="mt-3 pt-3 border-t border-border">
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      (03081) 서울시 종로구 율곡로 171, 204호(원남동, 글로벌센터)
+                    </p>
+                    <p className="text-[10px] text-primary mt-0.5">alumni.skku.edu</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-72 bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+              <div className="bg-primary px-5 py-4 text-center">
+                <img src={skkuLogo} alt="SKKU" className="h-6 brightness-0 invert mx-auto object-contain" />
+                <p className="text-primary-foreground text-[10px] mt-1.5 font-medium">
+                  SUNGKYUNKWAN UNIVERSITY ALUMNI ASSOCIATION
+                </p>
+              </div>
+              <div className="p-6 text-center">
+                <div className="w-24 h-28 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-4">
+                  <User className="w-10 h-10 text-primary" />
+                </div>
+                <p className="text-xl font-bold text-foreground">{mockUser.name}</p>
+                <p className="text-sm text-primary font-semibold mt-1">{mockUser.position}</p>
+                <p className="text-xs text-muted-foreground mt-1">{mockUser.dept} / {mockUser.year}학번</p>
+                <div className="mt-4 pt-4 border-t border-border text-left">
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    (03081) 서울시 종로구 율곡로 171, 204호(원남동, 글로벌센터)
+                  </p>
+                  <p className="text-[10px] text-primary mt-1">https://alumni.skku.edu</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <p className="text-center text-xs text-muted-foreground mt-3">
+          화면을 보여주시면 신분증으로 활용할 수 있습니다
+        </p>
+      </section>
 
-      {/* Section 3: Recent Notices */}
+      {/* Section 2: Recent Notices */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base font-bold text-foreground">공지사항</h3>
@@ -273,7 +319,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Section 4: Recent Community / Collab Posts */}
+      {/* Section 3: Recent Community / Collab Posts */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base font-bold text-foreground">커뮤니티 소식</h3>
@@ -301,10 +347,29 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Section 4: Benefits */}
+      <section>
+        <h3 className="text-base font-bold text-foreground mb-3">납부자 혜택</h3>
+        <div className="grid grid-cols-2 gap-3">
+          {benefits.map((b) => (
+            <button
+              key={b.title}
+              onClick={() => handleBenefitClick(b)}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all text-center"
+            >
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                <b.icon className="w-5 h-5 text-primary" />
+              </div>
+              <span className="text-xs font-medium text-foreground leading-tight">{b.title}</span>
+              {!b.ready && <Badge variant="secondary" className="text-[10px]">준비 중</Badge>}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Section 5: About Alumni Association */}
       <section>
         <h3 className="text-base font-bold text-foreground mb-3">총동창회 소개</h3>
-
         <Accordion type="multiple" className="space-y-2">
           {aboutSections.map((section) => (
             <AccordionItem

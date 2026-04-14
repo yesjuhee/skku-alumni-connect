@@ -24,6 +24,7 @@ import BusinessPage from "./pages/BusinessPage";
 import MyPage from "./pages/MyPage";
 import IDCardPage from "./pages/IDCardPage";
 import BenefitsPage from "./pages/BenefitsPage";
+import SettingsPage from "./pages/SettingsPage";
 import PlaceholderTab from "./pages/PlaceholderTab";
 import AdminLayout from "./components/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="mypage" element={<MyPage />} />
             <Route path="id-card" element={<IDCardPage />} />
             <Route path="benefits" element={<BenefitsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>

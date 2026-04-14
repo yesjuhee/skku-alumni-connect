@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Home, Users, Newspaper, MessageSquare, User, LogOut, CreditCard, Gift, ChevronDown } from "lucide-react";
+import { Home, Users, Newspaper, MessageSquare, Briefcase, User, LogOut, Settings, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,15 +67,11 @@ const MainLayout = () => {
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem onClick={() => navigate("/main/mypage")}>
                 <User className="w-4 h-4 mr-2" />
-                내정보 조회수정
+                내정보 조회·수정
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/main/id-card")}>
-                <CreditCard className="w-4 h-4 mr-2" />
-                디지털 신분증
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/main/benefits")}>
-                <Gift className="w-4 h-4 mr-2" />
-                회비 납부자 혜택
+              <DropdownMenuItem onClick={() => navigate("/main/settings")}>
+                <Settings className="w-4 h-4 mr-2" />
+                앱 설정
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
