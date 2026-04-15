@@ -28,7 +28,7 @@ const Landing = () => {
             로그인
           </Button>
           <Button
-            onClick={() => navigate("/register/type")}
+            onClick={() => navigate("/register/verify")}
             variant="outline"
             className="w-full h-13 text-base font-semibold border-primary text-primary hover:bg-secondary"
             size="lg"
