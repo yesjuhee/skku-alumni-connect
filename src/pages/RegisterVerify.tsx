@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PageHeader from "@/components/PageHeader";
 import StepIndicator from "@/components/StepIndicator";
-import { toast } from "sonner";
+import { AlertTriangle } from "lucide-react";
 
 const departments = [
   "경영학과", "컴퓨터공학과", "법학과", "건축학과", "경제학과",
@@ -37,7 +37,6 @@ const RegisterVerify = () => {
     ev.preventDefault();
     if (!validate()) return;
 
-    // Mock: name "실패" triggers failure
     if (form.name === "실패") {
       setMatchFailed(true);
       return;
@@ -45,6 +44,51 @@ const RegisterVerify = () => {
     setMatchFailed(false);
     navigate("/register/payment-check");
   };
+
+  if (matchFailed) {
+    return (
+      <div className="page-container animate-fade-in">
+        <PageHeader title="본인확인" />
+        <StepIndicator steps={STEPS} currentStep={1} />
+
+        <div className="flex flex-col items-center text-center mt-8">
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-5">
+            <AlertTriangle className="w-8 h-8 text-destructive" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground mb-2">
+            매칭 실패
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            입력하신 정보와 일치하는 임원 정보가 없습니다.<br />
+            신규 임원으로 신청하시겠습니까?
+          </p>
+
+          <div className="w-full space-y-3 mb-8">
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() => navigate("/register/new-apply")}
+            >
+              신규 임원 신청하기
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              size="lg"
+              onClick={() => setMatchFailed(false)}
+            >
+              다시 입력하기
+            </Button>
+          </div>
+
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            정보가 정확한데도 매칭이 안 되는 경우,<br />
+            총동창회 사무처(<a href="tel:02-760-1290" className="text-primary underline">02-760-1290</a>)로 문의해 주세요.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container animate-fade-in">
@@ -54,12 +98,6 @@ const RegisterVerify = () => {
       <p className="text-muted-foreground mb-6">
         총동창회에 등록된 정보로 본인을 확인합니다
       </p>
-
-      {matchFailed && (
-        <div className="p-4 rounded-lg bg-destructive/10 text-destructive text-sm mb-5">
-          등록된 정보와 일치하지 않습니다. 총동창회 사무처(02-760-1290)로 문의해주세요.
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
