@@ -36,6 +36,7 @@ import AdminPosts from "./pages/admin/AdminPosts";
 import AdminCommunity from "./pages/admin/AdminCommunity";
 import AdminReports from "./pages/admin/AdminReports";
 import BlockedUsersPage from "./pages/BlockedUsersPage";
+import OpenSourceLicensePage from "./pages/OpenSourceLicensePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="benefits" element={<BenefitsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="blocked" element={<BlockedUsersPage />} />
+            <Route path="licenses" element={<OpenSourceLicensePage />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>

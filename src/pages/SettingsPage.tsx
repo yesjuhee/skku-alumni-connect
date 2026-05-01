@@ -1,6 +1,9 @@
-import { Phone, Mail, FileText, Shield, Info } from "lucide-react";
+import { Phone, Mail, FileText, Shield, Info, Code2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const SettingsPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 animate-fade-in">
       <h2 className="text-xl font-bold text-foreground mb-6">앱 설정</h2>
@@ -51,6 +54,15 @@ const SettingsPage = () => {
               <Shield className="w-5 h-5 text-primary" />
             </div>
             <span className="text-sm font-semibold text-foreground">개인정보처리방침</span>
+          </button>
+          <button
+            onClick={() => navigate("/main/licenses")}
+            className="w-full flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all text-left"
+          >
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <Code2 className="w-5 h-5 text-primary" />
+            </div>
+            <span className="text-sm font-semibold text-foreground">오픈소스 라이선스</span>
           </button>
           <div className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
