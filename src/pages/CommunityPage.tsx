@@ -36,9 +36,10 @@ import { CLUBS, RESEARCH_GROUPS, type Club } from "@/data/community";
 import { MEMBERS, FILTER_OPTIONS } from "@/data/members";
 import { toast } from "sonner";
 import ReportMenu from "@/components/ReportMenu";
+import OwnerActionMenu from "@/components/OwnerActionMenu";
 import { selectDeleted, useReportStore } from "@/data/reports";
 import { useBlockedAuthorIds, useIsAuthorNameBlocked } from "@/hooks/useBlockedAuthors";
-import { resolveAuthorId } from "@/lib/currentUser";
+import { CURRENT_USER, resolveAuthorId } from "@/lib/currentUser";
 
 // === Business tab data (from BusinessPage) ===
 const INDUSTRIES = [
@@ -123,13 +124,21 @@ const CollabPostRow = ({
         </div>
       </button>
       <div className="absolute top-2 right-2">
-        <ReportMenu
-          targetKind="businessPost"
-          targetId={post.id}
-          targetSnapshot={{ title: post.title, content: post.body, authorName: post.author }}
-          reportedAuthorMemberId={authorId}
-          triggerSize="sm"
-        />
+        {authorId === CURRENT_USER.id ? (
+          <OwnerActionMenu
+            targetKind="businessPost"
+            targetId={post.id}
+            triggerSize="sm"
+          />
+        ) : (
+          <ReportMenu
+            targetKind="businessPost"
+            targetId={post.id}
+            targetSnapshot={{ title: post.title, content: post.body, authorName: post.author }}
+            reportedAuthorMemberId={authorId}
+            triggerSize="sm"
+          />
+        )}
       </div>
     </div>
   );
@@ -273,12 +282,20 @@ const CommunityPage = () => {
             <h1 className="text-xl md:text-2xl font-bold text-foreground">{selectedPost.title}</h1>
             <p className="text-sm text-muted-foreground mt-2">{selectedPost.author} · {selectedPost.date}</p>
           </div>
-          <ReportMenu
-            targetKind="businessPost"
-            targetId={selectedPost.id}
-            targetSnapshot={{ title: selectedPost.title, content: selectedPost.body, authorName: selectedPost.author }}
-            reportedAuthorMemberId={detailAuthorId}
-          />
+          {detailAuthorId === CURRENT_USER.id ? (
+            <OwnerActionMenu
+              targetKind="businessPost"
+              targetId={selectedPost.id}
+              onDeleted={() => setSelectedPost(null)}
+            />
+          ) : (
+            <ReportMenu
+              targetKind="businessPost"
+              targetId={selectedPost.id}
+              targetSnapshot={{ title: selectedPost.title, content: selectedPost.body, authorName: selectedPost.author }}
+              reportedAuthorMemberId={detailAuthorId}
+            />
+          )}
         </div>
         <hr className="border-border" />
         <div className="text-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">

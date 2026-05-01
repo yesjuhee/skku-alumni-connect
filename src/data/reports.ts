@@ -185,6 +185,12 @@ export const resolveReport = (
 export const isTargetDeleted = (kind: TargetKind, id: string) =>
   store.deleted.some((d) => d.targetKind === kind && d.targetId === id);
 
+export const deleteOwnTarget = (kind: TargetKind, id: string) => {
+  if (store.deleted.some((d) => d.targetKind === kind && d.targetId === id)) return;
+  store.deleted = [...store.deleted, { targetKind: kind, targetId: id }];
+  emit();
+};
+
 export const addBlock = (input: {
   blockerMemberId: string;
   blockedMemberId: string;

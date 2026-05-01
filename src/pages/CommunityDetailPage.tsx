@@ -18,9 +18,10 @@ import { CLUBS, RESEARCH_GROUPS, type ClubPost } from "@/data/community";
 import { MEMBERS } from "@/data/members";
 import { toast } from "sonner";
 import ReportMenu from "@/components/ReportMenu";
+import OwnerActionMenu from "@/components/OwnerActionMenu";
 import { useReportStore, selectDeleted } from "@/data/reports";
 import { useBlockedAuthorIds, useIsAuthorNameBlocked } from "@/hooks/useBlockedAuthors";
-import { resolveAuthorId } from "@/lib/currentUser";
+import { CURRENT_USER, resolveAuthorId } from "@/lib/currentUser";
 
 const ClubPostCard = ({ post, onClick }: { post: ClubPost; onClick: () => void }) => {
   const isBlocked = useIsAuthorNameBlocked(post.author);
@@ -59,13 +60,21 @@ const ClubPostCard = ({ post, onClick }: { post: ClubPost; onClick: () => void }
             <ImageIcon className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
           )}
           <div onClick={(e) => e.stopPropagation()}>
-            <ReportMenu
-              targetKind="communityPost"
-              targetId={post.id}
-              targetSnapshot={{ title: post.title, content: post.content, authorName: post.author }}
-              reportedAuthorMemberId={authorId}
-              triggerSize="sm"
-            />
+            {authorId === CURRENT_USER.id ? (
+              <OwnerActionMenu
+                targetKind="communityPost"
+                targetId={post.id}
+                triggerSize="sm"
+              />
+            ) : (
+              <ReportMenu
+                targetKind="communityPost"
+                targetId={post.id}
+                targetSnapshot={{ title: post.title, content: post.content, authorName: post.author }}
+                reportedAuthorMemberId={authorId}
+                triggerSize="sm"
+              />
+            )}
           </div>
         </div>
         <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{post.content}</p>
